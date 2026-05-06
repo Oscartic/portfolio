@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oscar Ballesteros — Frontend Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #F4F0E6;
+  --bg2: #EDE8DB;
+  --ink: #1A1A14;
+  --ink2: #3D3D30;
+  --ink3: #7A7A68;
+  --green: #2D6A2D;
+  --green-glow: #4CAF50;
+  --green-bright: #00C853;
+  --amber: #B8860B;
+  --amber-light: #DAA520;
+  --paper-shadow: rgba(0,0,0,0.08);
+  --scanline: rgba(0,0,0,0.03);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 300;
+  cursor: none;
+  overflow-x: hidden;
+}
+
+/* CUSTOM CURSOR */
+.cursor {
+  width: 12px; height: 20px;
+  background: var(--green-bright);
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: multiply;
+  animation: blink 1s step-end infinite;
+  transform: translateY(-2px);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* SCANLINES */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--scanline) 0px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* PAPER GRAIN */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23grain)' opacity='0.05'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 998;
+}
+
+/* HEADER / TERMINAL BAR */
+.terminal-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: var(--ink);
+  color: var(--green-bright);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 2rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+}
+
+.terminal-dots {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+}
+
+.dot-r { background: #FF5F56; }
+.dot-y { background: #FFBD2E; }
+.dot-g { background: #27C93F; }
+
+.terminal-title {
+  flex: 1;
+  text-align: center;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+}
+
+.terminal-time {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.3);
+}
+
+/* MAIN LAYOUT */
+.layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  min-height: 100vh;
+  padding-top: 34px;
+}
+
+/* SIDEBAR */
+.sidebar {
+  background: var(--ink);
+  padding: 3rem 2rem;
+  position: sticky;
+  top: 34px;
+  height: calc(100vh - 34px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--green); }
+
+.prompt-line {
+  font-size: 0.65rem;
+  color: var(--green-bright);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.3rem;
+  opacity: 0.6;
+}
+
+.sidebar-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #F4F0E6;
+  line-height: 1.2;
+  margin-bottom: 0.3rem;
+  letter-spacing: -0.02em;
+}
+
+.sidebar-role {
+  font-size: 0.7rem;
+  color: var(--green-bright);
+  letter-spacing: 0.1em;
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+.sidebar-bio {
+  font-size: 0.72rem;
+  color: rgba(244,240,230,0.5);
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+}
+
+.sidebar-section {
+  margin-bottom: 2rem;
+}
+
+.sidebar-label {
+  font-size: 0.58rem;
+  color: var(--green);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sidebar-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(244,240,230,0.08);
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.68rem;
+  color: rgba(244,240,230,0.55);
+  text-decoration: none;
+  padding: 0.4rem 0;
+  transition: color 0.2s;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.sidebar-link:hover { color: var(--green-bright); }
+
+.sidebar-link .icon { color: var(--green); font-size: 0.8rem; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.65rem;
+  color: rgba(244,240,230,0.4);
+  text-decoration: none;
+  padding: 0.5rem 0;
+  letter-spacing: 0.05em;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.nav-item:hover { color: var(--green-bright); }
+
+.nav-item .nav-num {
+  color: var(--green);
+  font-size: 0.6rem;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  font-size: 0.58rem;
+  color: rgba(244,240,230,0.2);
+  letter-spacing: 0.1em;
+  line-height: 1.8;
+}
+
+/* MAIN CONTENT */
+.main {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* HERO SECTION */
+.hero {
+  padding: 4rem 4rem 3rem;
+  border-bottom: 1px solid var(--bg2);
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.hero-watermark {
+  position: absolute;
+  right: -2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16rem;
+  font-weight: 700;
+  color: rgba(0,0,0,0.03);
+  line-height: 1;
+  pointer-events: none;
+  letter-spacing: -0.05em;
+  user-select: none;
+}
+
+.typewriter-wrap {
+  margin-bottom: 2rem;
+}
+
+.line-code {
+  font-size: 0.7rem;
+  color: var(--ink3);
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.line-code .comment { color: var(--amber); font-style: italic; }
+.line-code .keyword { color: var(--green); font-weight: 600; }
+.line-code .string { color: #C0392B; }
+.line-code .number { color: var(--amber-light); }
+
+.hero-heading {
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  margin: 1.5rem 0;
+  color: var(--ink);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.hero-heading .underscore {
+  color: var(--green-bright);
+  animation: blink 1s step-end infinite;
+}
+
+.hero-heading em {
+  font-style: normal;
+  position: relative;
+  display: inline-block;
+}
+
+.hero-heading em::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: 0; right: 0;
+  height: 3px;
+  background: var(--green-bright);
+}
+
+.hero-meta {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.68rem;
+  color: var(--ink3);
+}
+
+.meta-item .meta-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green-bright);
+  flex-shrink: 0;
+}
+
+/* SECTIONS */
+.section {
+  padding: 3.5rem 4rem;
+  border-bottom: 1px solid var(--bg2);
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.sec-cmd {
+  font-size: 0.65rem;
+  color: var(--green);
+  font-weight: 600;
+}
+
+.sec-cmd::before { content: '$ '; color: var(--green-bright); }
+
+.sec-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.sec-line {
+  flex: 1;
+  height: 1px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--ink3) 0px,
+    var(--ink3) 4px,
+    transparent 4px,
+    transparent 8px
+  );
+  opacity: 0.2;
+}
+
+/* SKILLS */
+.skills-section { background: var(--bg); }
+
+.skill-category {
+  margin-bottom: 1.5rem;
+}
+
+.skill-cat-label {
+  font-size: 0.6rem;
+  color: var(--ink3);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+  font-style: italic;
+}
+
+.skill-cat-label::before { content: '# '; color: var(--amber); }
+
+.skills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.skill-tag {
+  font-size: 0.65rem;
+  padding: 0.3rem 0.8rem;
+  background: var(--ink);
+  color: var(--green-bright);
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(0,0,0,0.15);
+  transition: all 0.15s;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.skill-tag::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--green-bright);
+  transform: translateX(-100%);
+  transition: transform 0.2s;
+}
+
+.skill-tag:hover { color: var(--ink); }
+.skill-tag:hover::before { transform: translateX(0); }
+.skill-tag span { position: relative; z-index: 1; }
+
+/* EXPERIENCE */
+.exp-item {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px dashed rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.exp-item:last-child { border-bottom: none; margin-bottom: 0; }
+
+.exp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.8rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.exp-company-wrap {}
+
+.exp-company {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.exp-role {
+  font-size: 0.68rem;
+  color: var(--green);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  margin-top: 0.2rem;
+}
+
+.exp-role::before { content: '→ '; color: var(--ink3); }
+
+.exp-date {
+  font-size: 0.62rem;
+  color: var(--ink3);
+  text-align: right;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.exp-current-badge {
+  display: inline-block;
+  background: var(--green-bright);
+  color: var(--ink);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 0.15rem 0.5rem;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  text-transform: uppercase;
+}
+
+.exp-desc {
+  font-size: 0.72rem;
+  color: var(--ink2);
+  line-height: 1.9;
+  font-weight: 300;
+  margin-bottom: 0.8rem;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.exp-desc::before {
+  content: '// ';
+  color: var(--amber);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+}
+
+.exp-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.stack-chip {
+  font-size: 0.58rem;
+  color: var(--ink3);
+  border: 1px solid rgba(0,0,0,0.12);
+  padding: 0.15rem 0.5rem;
+  letter-spacing: 0.08em;
+  transition: all 0.15s;
+}
+
+.stack-chip:hover {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+/* EDUCATION */
+.edu-item {
+  display: flex;
+  gap: 2rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px dashed rgba(0,0,0,0.08);
+  align-items: flex-start;
+}
+
+.edu-item:last-child { border-bottom: none; }
+
+.edu-year-block {
+  flex-shrink: 0;
+  width: 100px;
+  text-align: right;
+}
+
+.edu-year {
+  font-size: 0.62rem;
+  color: var(--green);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  font-style: italic;
+}
+
+.edu-content {}
+
+.edu-school {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin-bottom: 0.3rem;
+}
+
+.edu-degree {
+  font-size: 0.68rem;
+  color: var(--ink2);
+  line-height: 1.7;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 300;
+}
+
+/* CONTACT / FOOTER AREA */
+.contact-section {
+  padding: 3.5rem 4rem;
+  background: var(--ink);
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-section::before {
+  content: '>_ ';
+  position: absolute;
+  right: 3rem;
+  bottom: 2rem;
+  font-size: 8rem;
+  color: rgba(255,255,255,0.03);
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.contact-message {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #F4F0E6;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.contact-message .green { color: var(--green-bright); }
+
+.contact-message .blink {
+  display: inline-block;
+  width: 3px;
+  background: var(--green-bright);
+  animation: blink 1s step-end infinite;
+  margin-left: 4px;
+  height: 1.2em;
+  vertical-align: middle;
+}
+
+.contact-links-list { list-style: none; }
+
+.contact-links-list li {
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.contact-links-list a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.contact-links-list a:hover .c-label { color: var(--green-bright); }
+.contact-links-list a:hover .c-arrow { transform: translateX(4px); }
+
+.c-type {
+  font-size: 0.55rem;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+.c-label {
+  font-size: 0.8rem;
+  color: rgba(244,240,230,0.7);
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+}
+
+.c-arrow {
+  color: var(--green-bright);
+  font-size: 1rem;
+  transition: transform 0.2s;
+}
+
+/* TERMINAL LOG - small running text */
+.log-line {
+  font-size: 0.58rem;
+  color: var(--ink3);
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.log-timestamp { color: var(--amber); opacity: 0.6; }
+.log-level-ok { color: var(--green); }
+.log-level-info { color: var(--amber-light); }
+.log-msg { color: var(--ink2); font-family: 'IBM Plex Sans', sans-serif; font-weight: 300; }
+
+.log-area {
+  padding: 1rem 4rem 0;
+  background: var(--bg2);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Typewriter */
+.typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid var(--green-bright);
+  animation: typing 2s steps(40, end) forwards, cursor-blink 0.8s step-end infinite;
+  width: 0;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes cursor-blink {
+  0%, 100% { border-color: var(--green-bright); }
+  50% { border-color: transparent; }
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; }
+  .hero, .section { padding: 2.5rem 1.5rem; }
+  .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .hero-watermark { display: none; }
+  .log-area { padding: 1rem 1.5rem 0; }
+  .contact-section { padding: 2.5rem 1.5rem; }
+  .edu-item { flex-direction: column; gap: 0.5rem; }
+  .edu-year-block { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- TERMINAL BAR -->
+<div class="terminal-bar">
+  <div class="terminal-dots">
+    <div class="dot dot-r"></div>
+    <div class="dot dot-y"></div>
+    <div class="dot dot-g"></div>
+  </div>
+  <div class="terminal-title">oscar-ballesteros — frontend-engineer — zsh</div>
+  <div class="terminal-time" id="clock">--:--:--</div>
+</div>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="prompt-line">~/portfolio $</div>
+    <div class="sidebar-name">Oscar<br>Ballesteros</div>
+    <div class="sidebar-role">Frontend Engineer_</div>
+
+    <p class="sidebar-bio">
+      8+ años construyendo interfaces que escalan. De Ruby on Rails a React, de startups a Mercado Libre. Santiago de Chile.
+    </p>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Contacto</div>
+      <a href="mailto:oscartic@gmail.com" class="sidebar-link">
+        <span class="icon">@</span> oscartic@gmail.com
+      </a>
+      <a href="https://oscarballesteros.cl" target="_blank" class="sidebar-link">
+        <span class="icon">◈</span> oscarballesteros.cl
+      </a>
+      <a href="https://linkedin.com/in/oscarballesteros" target="_blank" class="sidebar-link">
+        <span class="icon">in</span> /oscarballesteros
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Navegación</div>
+      <a href="#skills" class="nav-item"><span class="nav-num">01</span> stack</a>
+      <a href="#experience" class="nav-item"><span class="nav-num">02</span> experiencia</a>
+      <a href="#education" class="nav-item"><span class="nav-num">03</span> formación</a>
+      <a href="#contact" class="nav-item"><span class="nav-num">04</span> contacto</a>
+    </div>
+
+    <div class="sidebar-footer">
+      last updated: 2025<br>
+      location: Santiago, CL<br>
+      status: open to work<br>
+      <br>
+      <span style="color: var(--green); opacity: 0.5;">■ ■ ■</span>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- LOG AREA -->
+    <div class="log-area">
+      <div class="log-line">
+        <span class="log-timestamp">09:41:03</span>
+        <span class="log-level-ok">[OK]</span>
+        <span class="log-msg">Portfolio loaded successfully. Welcome.</span>
+      </div>
+      <div class="log-line">
+        <span class="log-timestamp">09:41:04</span>
+        <span class="log-level-info">[INFO]</span>
+        <span class="log-msg">8 years of frontend experience detected. Rendering profile...</span>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero reveal">
+      <div class="hero-watermark">FE</div>
+
+      <div class="typewriter-wrap">
+        <div class="line-code">
+          <span class="comment">// ./src/humans/oscar.js</span>
+        </div>
+        <div class="line-code">
+          <span class="keyword">const</span>&nbsp;engineer&nbsp;=&nbsp;{
+        </div>
+        <div class="line-code" style="padding-left:1.5rem">
+          name:&nbsp;<span class="string">"Oscar Ballesteros"</span>,
+        </div>
+        <div class="line-code" style="padding-left:1.5rem">
+          role:&nbsp;<span class="string">"Frontend Engineer"</span>,
+        </div>
+        <div class="line-code" style="padding-left:1.5rem">
+          years:&nbsp;<span class="number">8</span>,
+        </div>
+        <div class="line-code" style="padding-left:1.5rem">
+          location:&nbsp;<span class="string">"Santiago, Chile"</span>
+        </div>
+        <div class="line-code">};</div>
+      </div>
+
+      <h1 class="hero-heading">
+        Building<br>
+        <em>interfaces</em><br>
+        that matter<span class="underscore">_</span>
+      </h1>
+
+      <div class="hero-meta">
+        <div class="meta-item">
+          <div class="meta-dot"></div>
+          Mercado Libre · 2022–presente
+        </div>
+        <div class="meta-item">
+          <div class="meta-dot"></div>
+          JavaScript · React · Node.js
+        </div>
+        <div class="meta-item">
+          <div class="meta-dot"></div>
+          MIT xPro Certificate
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section class="section skills-section" id="skills">
+      <div class="section-header">
+        <span class="sec-cmd">ls skills/</span>
+        <h2 class="sec-title">Stack técnico</h2>
+        <div class="sec-line"></div>
+      </div>
+
+      <div class="skill-category reveal">
+        <div class="skill-cat-label">Frontend</div>
+        <div class="skills-row">
+          <div class="skill-tag"><span>JavaScript</span></div>
+          <div class="skill-tag"><span>React</span></div>
+          <div class="skill-tag"><span>Vue.js</span></div>
+          <div class="skill-tag"><span>CSS3</span></div>
+          <div class="skill-tag"><span>HTML5</span></div>
+          <div class="skill-tag"><span>jQuery</span></div>
+        </div>
+      </div>
+
+      <div class="skill-category reveal">
+        <div class="skill-cat-label">Backend &amp; Runtime</div>
+        <div class="skills-row">
+          <div class="skill-tag"><span>Node.js</span></div>
+          <div class="skill-tag"><span>Ruby</span></div>
+          <div class="skill-tag"><span>Ruby on Rails</span></div>
+          <div class="skill-tag"><span>REST APIs</span></div>
+          <div class="skill-tag"><span>Azure Functions</span></div>
+        </div>
+      </div>
+
+      <div class="skill-category reveal">
+        <div class="skill-cat-label">Data &amp; Tools</div>
+        <div class="skills-row">
+          <div class="skill-tag"><span>MongoDB</span></div>
+          <div class="skill-tag"><span>PostgreSQL</span></div>
+          <div class="skill-tag"><span>Jest</span></div>
+          <div class="skill-tag"><span>Git</span></div>
+          <div class="skill-tag"><span>Bootstrap</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section class="section" id="experience">
+      <div class="section-header">
+        <span class="sec-cmd">cat experience.log</span>
+        <h2 class="sec-title">Experiencia</h2>
+        <div class="sec-line"></div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-header">
+          <div class="exp-company-wrap">
+            <div class="exp-company">Mercado Libre <span class="exp-current-badge">actual</span></div>
+            <div class="exp-role">Software Engineer · CX-ONE-HUB</div>
+          </div>
+          <div class="exp-date">Dic 2022<br>→ presente</div>
+        </div>
+        <p class="exp-desc">Desarrollo y mejora continua del CRM interno para gestión de casos de usuarios a escala. Parte del equipo CX-ONE-HUB enfocado en herramientas de soporte y experiencia del cliente.</p>
+        <div class="exp-stack">
+          <span class="stack-chip">JavaScript</span>
+          <span class="stack-chip">React</span>
+          <span class="stack-chip">Node.js</span>
+          <span class="stack-chip">Jest</span>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-header">
+          <div class="exp-company-wrap">
+            <div class="exp-company">Falabella FTC</div>
+            <div class="exp-role">Desarrollador Full Stack · Equipo THOR</div>
+          </div>
+          <div class="exp-date">Nov 2021<br>→ Nov 2022</div>
+        </div>
+        <p class="exp-desc">Middleware que conectó Falabella y Sodimac con Linio en Chile, Colombia, Perú y México. Automatización de procesos manuales, arquitectura de stock, precios y sincronización de productos entre sistemas.</p>
+        <div class="exp-stack">
+          <span class="stack-chip">JavaScript</span>
+          <span class="stack-chip">Node.js</span>
+          <span class="stack-chip">MongoDB</span>
+          <span class="stack-chip">Azure Functions</span>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-header">
+          <div class="exp-company-wrap">
+            <div class="exp-company">TacTech (Falabella)</div>
+            <div class="exp-role">Desarrollador Full Stack · Sellers Marketplace</div>
+          </div>
+          <div class="exp-date">Jul 2020<br>→ Oct 2021</div>
+        </div>
+        <p class="exp-desc">Plataforma SVL para Sellers Marketplace Falabella en Chile, Colombia y Perú. Soporte de plataforma, análisis de datos y desarrollo de nuevos features.</p>
+        <div class="exp-stack">
+          <span class="stack-chip">JavaScript</span>
+          <span class="stack-chip">Ruby on Rails</span>
+          <span class="stack-chip">Node.js</span>
+          <span class="stack-chip">MongoDB</span>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-header">
+          <div class="exp-company-wrap">
+            <div class="exp-company">Abstract</div>
+            <div class="exp-role">Desarrollador Full Stack</div>
+          </div>
+          <div class="exp-date">Sep 2018<br>→ Jun 2020</div>
+        </div>
+        <p class="exp-desc">Sistemas a medida: control de tickets para Tricao, conexión con máquinas vending, monitoreo de contaminación en industria salmonera del sur de Chile.</p>
+        <div class="exp-stack">
+          <span class="stack-chip">React</span>
+          <span class="stack-chip">Vue.js</span>
+          <span class="stack-chip">Ruby on Rails</span>
+          <span class="stack-chip">PostgreSQL</span>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-header">
+          <div class="exp-company-wrap">
+            <div class="exp-company">Pronueva</div>
+            <div class="exp-role">Full Stack Ruby on Rails</div>
+          </div>
+          <div class="exp-date">Jun 2017<br>→ Ago 2018</div>
+        </div>
+        <p class="exp-desc">WAKI — Sistema de gestión de horarios para industria hotelera y gastronómica. Base de datos relacional, administrador web, API y componentes React.</p>
+        <div class="exp-stack">
+          <span class="stack-chip">Ruby on Rails</span>
+          <span class="stack-chip">PostgreSQL</span>
+          <span class="stack-chip">React</span>
+          <span class="stack-chip">jQuery</span>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-header">
+          <div class="exp-company-wrap">
+            <div class="exp-company">Aceleración Labs</div>
+            <div class="exp-role">Ruby on Rails · Front-end Trainee</div>
+          </div>
+          <div class="exp-date">Oct 2016<br>→ Ene 2017</div>
+        </div>
+        <p class="exp-desc">Optimización de front-end con Bootstrap y jQuery. Desarrollo de módulos específicos en proyectos Ruby on Rails. Primer rol profesional en tecnología.</p>
+        <div class="exp-stack">
+          <span class="stack-chip">Ruby on Rails</span>
+          <span class="stack-chip">jQuery</span>
+          <span class="stack-chip">Bootstrap</span>
+          <span class="stack-chip">CSS3</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- EDUCATION -->
+    <section class="section" id="education" style="background: var(--bg2);">
+      <div class="section-header">
+        <span class="sec-cmd">cat education.md</span>
+        <h2 class="sec-title">Formación</h2>
+        <div class="sec-line"></div>
+      </div>
+
+      <div class="edu-item reveal">
+        <div class="edu-year-block">
+          <div class="edu-year">2021–2022</div>
+        </div>
+        <div class="edu-content">
+          <div class="edu-school">MIT xPro · Cambridge</div>
+          <div class="edu-degree">Professional Certificate in Coding: Full Stack Development with MERN — Massachusetts Institute of Technology</div>
+        </div>
+      </div>
+
+      <div class="edu-item reveal">
+        <div class="edu-year-block">
+          <div class="edu-year">2013–2018</div>
+        </div>
+        <div class="edu-content">
+          <div class="edu-school">INACAP Santiago</div>
+          <div class="edu-degree">Ingeniero Informático — Universidad Tecnológica de Chile</div>
+        </div>
+      </div>
+
+      <div class="edu-item reveal">
+        <div class="edu-year-block">
+          <div class="edu-year">2002–2006</div>
+        </div>
+        <div class="edu-content">
+          <div class="edu-school">U. Politécnico Grancolombiano</div>
+          <div class="edu-degree">Profesional en Medios Audiovisuales, énfasis en diseño gráfico y fotografía — Bogotá</div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact-section" id="contact">
+      <div class="contact-grid">
+        <div class="reveal">
+          <div class="contact-message">
+            Hablemos<br>de tu próximo<br><span class="green">proyecto</span><span class="blink"></span>
+          </div>
+        </div>
+        <div class="reveal">
+          <ul class="contact-links-list">
+            <li>
+              <a href="mailto:oscartic@gmail.com">
+                <div>
+                  <div class="c-type">Email</div>
+                  <div class="c-label">oscartic@gmail.com</div>
+                </div>
+                <span class="c-arrow">→</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://oscarballesteros.cl" target="_blank">
+                <div>
+                  <div class="c-type">Website</div>
+                  <div class="c-label">oscarballesteros.cl</div>
+                </div>
+                <span class="c-arrow">→</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://linkedin.com/in/oscarballesteros" target="_blank">
+                <div>
+                  <div class="c-type">LinkedIn</div>
+                  <div class="c-label">/oscarballesteros</div>
+                </div>
+                <span class="c-arrow">→</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // Clock
+  const clock = document.getElementById('clock');
+  function updateClock() {
+    const now = new Date();
+    clock.textContent = now.toTimeString().slice(0,8);
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Hero immediate reveal
+  document.querySelector('.hero').classList.add('visible');
+</script>
+</body>
+</html>
