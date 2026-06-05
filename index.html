@@ -3,766 +3,705 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oscar Ballesteros — Frontend Engineer</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>Oscar Ballesteros — Software Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500;600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-  :root {
-    --red: #C8102E;
-    --red-dark: #8B0A1E;
-    --red-light: #FF1F45;
-    --black: #0A0A0A;
-    --off-white: #F5F2EE;
-    --gray: #888;
-    --light-gray: #E8E4DF;
-  }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--black);
-    color: var(--off-white);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    overflow-x: hidden;
-  }
-
-  /* NOISE TEXTURE OVERLAY */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 1000;
-    opacity: 0.6;
-  }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem 4rem;
-    background: rgba(10,10,10,0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(200,16,46,0.2);
-  }
-
-  .nav-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem;
-    letter-spacing: 0.1em;
-    color: var(--red);
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 2.5rem;
-    list-style: none;
-  }
-
-  .nav-links a {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    text-decoration: none;
-    color: var(--gray);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
-
-  .nav-links a:hover { color: var(--red-light); }
-
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding-top: 80px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .hero::after {
-    content: '';
-    position: absolute;
-    right: -200px; top: -200px;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(200,16,46,0.15) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .hero-left {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 6rem 4rem 4rem;
-  }
-
-  .hero-tag {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--red);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .hero-tag::before {
-    content: '';
-    display: block;
-    width: 30px; height: 1px;
-    background: var(--red);
-  }
-
-  h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(4rem, 8vw, 7rem);
-    line-height: 0.92;
-    letter-spacing: 0.02em;
-    margin-bottom: 1rem;
-  }
-
-  h1 .highlight {
-    color: var(--red);
-    display: block;
-  }
-
-  .hero-subtitle {
-    font-size: 1rem;
-    color: var(--gray);
-    line-height: 1.7;
-    max-width: 400px;
-    margin: 1.5rem 0 3rem;
-  }
-
-  .hero-cta {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .btn {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    text-decoration: none;
-    padding: 0.9rem 2rem;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: inline-block;
-  }
-
-  .btn-primary {
-    background: var(--red);
-    color: white;
-  }
-
-  .btn-primary:hover {
-    background: var(--red-light);
-    transform: translateY(-2px);
-  }
-
-  .btn-outline {
-    background: transparent;
-    color: var(--off-white);
-    border: 1px solid rgba(255,255,255,0.2);
-  }
-
-  .btn-outline:hover {
-    border-color: var(--red);
-    color: var(--red-light);
-  }
-
-  .hero-right {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 6rem 4rem 4rem;
-    position: relative;
-  }
-
-  .big-number {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 12rem;
-    color: rgba(200,16,46,0.08);
-    position: absolute;
-    right: -1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    line-height: 1;
-    pointer-events: none;
-    user-select: none;
-  }
-
-  .stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.05);
-  }
-
-  .stat-card {
-    background: var(--black);
-    padding: 2rem;
-    position: relative;
-    overflow: hidden;
-    transition: background 0.3s;
-  }
-
-  .stat-card:hover { background: #111; }
-
-  .stat-card::before {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 0; height: 2px;
-    background: var(--red);
-    transition: width 0.4s;
-  }
-
-  .stat-card:hover::before { width: 100%; }
-
-  .stat-number {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 3.5rem;
-    color: var(--red);
-    line-height: 1;
-    display: block;
-  }
-
-  .stat-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--gray);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-top: 0.5rem;
-    display: block;
-  }
-
-  /* SECTIONS */
-  section {
-    padding: 7rem 4rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 4rem;
-  }
-
-  .section-number {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--red);
-    letter-spacing: 0.1em;
-  }
-
-  h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 3.5rem;
-    letter-spacing: 0.05em;
-    line-height: 1;
-  }
-
-  .section-line {
-    flex: 1;
-    height: 1px;
-    background: rgba(255,255,255,0.08);
-  }
-
-  /* SKILLS */
-  #skills { background: #0D0D0D; max-width: 100%; }
-  #skills > div { max-width: 1200px; margin: 0 auto; padding: 7rem 4rem; }
-
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 1px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.05);
-  }
-
-  .skill-chip {
-    background: #0D0D0D;
-    padding: 1.25rem 1rem;
-    text-align: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    color: var(--gray);
-    text-transform: uppercase;
-    transition: all 0.2s;
-    cursor: default;
-  }
-
-  .skill-chip:hover {
-    background: var(--red);
-    color: white;
-    transform: scale(1.02);
-  }
-
-  /* EXPERIENCE */
-  .exp-list { display: flex; flex-direction: column; gap: 0; }
-
-  .exp-item {
-    display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 3rem;
-    padding: 3rem 0;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    position: relative;
-    transition: all 0.3s;
-  }
-
-  .exp-item:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
-
-  .exp-item::before {
-    content: '';
-    position: absolute;
-    left: -4rem; top: 0; bottom: 0;
-    width: 2px;
-    background: transparent;
-    transition: background 0.3s;
-  }
-
-  .exp-item:hover::before { background: var(--red); }
-
-  .exp-date {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.68rem;
-    color: var(--gray);
-    letter-spacing: 0.1em;
-    padding-top: 0.3rem;
-  }
-
-  .exp-current {
-    display: inline-block;
-    margin-top: 0.5rem;
-    background: var(--red);
-    color: white;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    padding: 0.2rem 0.6rem;
-    text-transform: uppercase;
-  }
-
-  .exp-company {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.6rem;
-    letter-spacing: 0.05em;
-    color: var(--off-white);
-  }
-
-  .exp-role {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--red);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin: 0.4rem 0 1rem;
-  }
-
-  .exp-desc {
-    font-size: 0.92rem;
-    color: rgba(245,242,238,0.65);
-    line-height: 1.75;
-  }
-
-  .exp-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1rem;
-  }
-
-  .tag {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.25rem 0.6rem;
-    border: 1px solid rgba(200,16,46,0.4);
-    color: var(--red-light);
-  }
-
-  /* EDUCATION */
-  .edu-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1px;
-    background: rgba(255,255,255,0.05);
-  }
-
-  .edu-card {
-    background: var(--black);
-    padding: 2.5rem;
-    transition: background 0.3s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .edu-card:hover { background: #111; }
-
-  .edu-card::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 3px; height: 0;
-    background: var(--red);
-    transition: height 0.4s;
-  }
-
-  .edu-card:hover::after { height: 100%; }
-
-  .edu-year {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--gray);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-  }
-
-  .edu-school {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.3rem;
-    letter-spacing: 0.05em;
-    color: var(--off-white);
-    margin-bottom: 0.5rem;
-  }
-
-  .edu-degree {
-    font-size: 0.85rem;
-    color: rgba(245,242,238,0.55);
-    line-height: 1.5;
-  }
-
-  /* CONTACT */
-  #contact { background: #0D0D0D; max-width: 100%; }
-  #contact > div { max-width: 1200px; margin: 0 auto; padding: 7rem 4rem; }
-
-  .contact-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6rem;
-    align-items: center;
-  }
-
-  .contact-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(3rem, 5vw, 5rem);
-    line-height: 0.95;
-    margin-bottom: 1.5rem;
-  }
-
-  .contact-title span { color: var(--red); }
-
-  .contact-desc {
-    font-size: 0.95rem;
-    color: var(--gray);
-    line-height: 1.7;
-  }
-
-  .contact-links {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-    background: rgba(255,255,255,0.05);
-  }
-
-  .contact-link {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--black);
-    padding: 1.5rem 2rem;
-    text-decoration: none;
-    transition: background 0.2s;
-    group: true;
-  }
-
-  .contact-link:hover { background: #111; }
-
-  .contact-link-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--gray);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 0.3rem;
-  }
-
-  .contact-link-value {
-    font-size: 0.95rem;
-    color: var(--off-white);
-  }
-
-  .contact-link-arrow {
-    color: var(--red);
-    font-size: 1.2rem;
-    transition: transform 0.2s;
-  }
-
-  .contact-link:hover .contact-link-arrow { transform: translateX(4px); }
-
-  /* FOOTER */
-  footer {
-    text-align: center;
-    padding: 2rem;
-    border-top: 1px solid rgba(255,255,255,0.05);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    color: rgba(136,136,136,0.5);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-  }
-
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .animate {
-    opacity: 0;
-    animation: fadeUp 0.7s ease forwards;
-  }
-
-  .delay-1 { animation-delay: 0.1s; }
-  .delay-2 { animation-delay: 0.25s; }
-  .delay-3 { animation-delay: 0.4s; }
-  .delay-4 { animation-delay: 0.55s; }
-  .delay-5 { animation-delay: 0.7s; }
-
-  /* SCROLL REVEAL */
-  .reveal {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    nav { padding: 1.2rem 1.5rem; }
-    .nav-links { display: none; }
-    .hero { grid-template-columns: 1fr; min-height: auto; }
-    .hero-left, .hero-right { padding: 3rem 1.5rem; }
-    .hero-right { padding-top: 0; }
-    section { padding: 4rem 1.5rem; }
-    .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
-    .contact-inner { grid-template-columns: 1fr; gap: 3rem; }
-    #skills > div, #contact > div { padding: 4rem 1.5rem; }
-    .big-number { font-size: 6rem; }
-  }
+:root {
+  --red: #C8202A;
+  --red-dark: #8B1219;
+  --red-bright: #E8252F;
+  --black: #0F0F0E;
+  --gray-dark: #1A1A18;
+  --gray-mid: #2A2A27;
+  --gray-line: #333330;
+  --gray-light: #9A9890;
+  --white: #F5F3EE;
+  --off-white: #EAE8E2;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Barlow', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(15,15,14,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--gray-line);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem; height: 56px;
+}
+.nav-logo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: 18px; letter-spacing: 0.05em;
+  color: var(--white); text-decoration: none;
+}
+.nav-logo span { color: var(--red); }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  font-family: 'Barlow Semi Condensed', sans-serif;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--gray-light);
+  text-decoration: none; transition: color .2s;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-badge {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--red);
+  border: 1px solid var(--red); padding: 4px 10px;
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  padding-top: 56px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-left {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 5rem 3rem 5rem 4rem;
+  position: relative; z-index: 2;
+}
+
+.hero-eyebrow {
+  font-family: 'Barlow Semi Condensed', sans-serif;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--red);
+  margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 12px;
+  opacity: 0; animation: fadeUp .6s ease forwards .1s;
+}
+.hero-eyebrow::before {
+  content: ''; display: block;
+  width: 32px; height: 2px; background: var(--red);
+}
+
+.hero-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(60px, 7vw, 100px);
+  line-height: 0.88;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 0.3rem;
+  opacity: 0; animation: fadeUp .6s ease forwards .2s;
+}
+.hero-lastname {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 400;
+  font-size: clamp(60px, 7vw, 100px);
+  line-height: 0.88;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 1.8rem;
+  opacity: 0; animation: fadeUp .6s ease forwards .3s;
+}
+
+.hero-role {
+  font-family: 'Barlow Semi Condensed', sans-serif;
+  font-size: 17px; font-weight: 500;
+  color: var(--gray-light); letter-spacing: 0.04em;
+  margin-bottom: 2rem;
+  opacity: 0; animation: fadeUp .6s ease forwards .4s;
+}
+
+.hero-desc {
+  font-size: 15px; color: var(--gray-light); line-height: 1.7;
+  max-width: 440px; margin-bottom: 2.5rem;
+  opacity: 0; animation: fadeUp .6s ease forwards .5s;
+}
+
+.hero-stats {
+  display: flex; gap: 2.5rem; margin-bottom: 2.5rem;
+  opacity: 0; animation: fadeUp .6s ease forwards .6s;
+}
+.stat-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: 44px; color: var(--red); line-height: 1;
+}
+.stat-label {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--gray-light); margin-top: 4px;
+}
+
+.hero-actions {
+  display: flex; gap: 1rem; align-items: center;
+  opacity: 0; animation: fadeUp .6s ease forwards .7s;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--red); color: var(--white);
+  font-family: 'Barlow Semi Condensed', sans-serif;
+  font-weight: 600; font-size: 13px; letter-spacing: 0.1em;
+  text-transform: uppercase; text-decoration: none;
+  padding: 13px 26px; transition: background .2s;
+}
+.btn-primary:hover { background: var(--red-bright); }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid var(--gray-line); color: var(--gray-light);
+  font-family: 'Barlow Semi Condensed', sans-serif;
+  font-weight: 600; font-size: 13px; letter-spacing: 0.1em;
+  text-transform: uppercase; text-decoration: none;
+  padding: 13px 26px; transition: border-color .2s, color .2s;
+}
+.btn-ghost:hover { border-color: var(--white); color: var(--white); }
+
+.hero-right {
+  position: relative; overflow: hidden;
+  background: var(--gray-dark);
+}
+.hero-right::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(200,32,42,0.15) 0%, transparent 60%);
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--gray-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--gray-line) 1px, transparent 1px);
+  background-size: 48px 48px; opacity: .5;
+}
+.hero-big-text {
+  position: absolute; bottom: -30px; right: -30px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: 240px; line-height: 1;
+  color: var(--red); opacity: .06; text-transform: uppercase;
+  user-select: none; pointer-events: none;
+}
+.hero-stack-visual {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  gap: 0; z-index: 2;
+}
+.stack-row {
+  display: flex; gap: 0;
+}
+.stack-chip {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  border: 1px solid var(--gray-line);
+  color: var(--gray-light);
+  transition: color .2s, border-color .2s, background .2s;
+  cursor: default;
+}
+.stack-chip:hover {
+  color: var(--white);
+  border-color: var(--red);
+  background: rgba(200,32,42,0.1);
+}
+.stack-chip.hot { color: var(--red); border-color: rgba(200,32,42,0.4); }
+
+/* ─── SECTION BASE ─── */
+section { padding: 5rem 4rem; }
+.section-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 11px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--red);
+  margin-bottom: 0.5rem;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-label::before {
+  content: ''; width: 24px; height: 2px; background: var(--red);
+}
+.section-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: clamp(36px, 4vw, 56px);
+  line-height: 0.95; text-transform: uppercase;
+  color: var(--white); margin-bottom: 3rem;
+  letter-spacing: -0.01em;
+}
+
+/* ─── STACK ─── */
+#stack { background: var(--gray-dark); border-top: 1px solid var(--gray-line); }
+.stack-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--gray-line);
+  border: 1px solid var(--gray-line);
+}
+.stack-category {
+  background: var(--black);
+  padding: 2rem;
+  transition: background .2s;
+}
+.stack-category:hover { background: var(--gray-dark); }
+.sc-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 11px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--red);
+  margin-bottom: 1.2rem;
+}
+.sc-items { display: flex; flex-wrap: wrap; gap: 6px; }
+.sc-item {
+  font-family: 'Barlow Semi Condensed', sans-serif;
+  font-size: 13px; font-weight: 500;
+  color: var(--off-white);
+  background: var(--gray-dark);
+  border: 1px solid var(--gray-line);
+  padding: 4px 12px;
+  transition: border-color .2s, color .2s;
+}
+.sc-item:hover { border-color: var(--red); color: var(--white); }
+.sc-item.featured { border-color: rgba(200,32,42,0.5); color: var(--white); }
+
+/* ─── EXPERIENCIA ─── */
+#experiencia { background: var(--black); border-top: 1px solid var(--gray-line); }
+.exp-list { display: flex; flex-direction: column; gap: 0; }
+.exp-item {
+  display: grid; grid-template-columns: 200px 1fr;
+  gap: 0;
+  border-bottom: 1px solid var(--gray-line);
+  transition: background .2s;
+}
+.exp-item:first-child { border-top: 1px solid var(--gray-line); }
+.exp-item:hover { background: var(--gray-dark); }
+
+.exp-left {
+  padding: 2rem;
+  border-right: 1px solid var(--gray-line);
+  display: flex; flex-direction: column; justify-content: flex-start;
+}
+.exp-period {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+  color: var(--red); text-transform: uppercase; margin-bottom: 0.4rem;
+}
+.exp-company {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 18px;
+  color: var(--white); line-height: 1.1;
+}
+.exp-location {
+  font-size: 11px; color: var(--gray-light); margin-top: 4px;
+}
+
+.exp-right { padding: 2rem 2.5rem; }
+.exp-role {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 22px;
+  color: var(--white); margin-bottom: 1rem; letter-spacing: 0.01em;
+}
+.exp-bullets { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.2rem; }
+.exp-bullet {
+  font-size: 14px; color: var(--gray-light); line-height: 1.6;
+  display: flex; gap: 10px;
+}
+.exp-bullet::before {
+  content: '▸'; color: var(--red); flex-shrink: 0;
+  font-size: 12px; margin-top: 3px;
+}
+.exp-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.exp-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--red);
+  border: 1px solid rgba(200,32,42,0.35);
+  padding: 3px 10px;
+}
+
+/* ─── FORMACIÓN ─── */
+#formacion { background: var(--gray-dark); border-top: 1px solid var(--gray-line); }
+.edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--gray-line); border: 1px solid var(--gray-line); }
+.edu-item {
+  background: var(--black); padding: 2.5rem;
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.edu-inst {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 20px; color: var(--white);
+}
+.edu-degree { font-size: 14px; color: var(--gray-light); line-height: 1.4; }
+.edu-period {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+  color: var(--red); text-transform: uppercase; margin-top: 0.5rem;
+}
+.edu-badge {
+  display: inline-block; margin-top: 0.8rem;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--red);
+  border: 1px solid rgba(200,32,42,0.4); padding: 3px 10px;
+  width: fit-content;
+}
+
+/* ─── CONTACTO ─── */
+#contacto {
+  background: var(--black);
+  border-top: 1px solid var(--gray-line);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  align-items: stretch;
+}
+.contact-left {
+  padding: 5rem 4rem;
+  border-right: 1px solid var(--gray-line);
+}
+.contact-right {
+  padding: 5rem 4rem;
+  background: var(--red);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.contact-big {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: clamp(48px, 5vw, 72px);
+  line-height: 0.92; text-transform: uppercase;
+  color: var(--white); margin-bottom: 2rem;
+}
+.contact-links { display: flex; flex-direction: column; gap: 1.2rem; }
+.contact-link {
+  display: flex; align-items: center; gap: 16px;
+  text-decoration: none; color: var(--white);
+  font-family: 'Barlow Semi Condensed', sans-serif;
+  font-size: 15px; font-weight: 500;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--gray-line);
+  transition: color .2s;
+}
+.contact-link:last-child { border-bottom: none; padding-bottom: 0; }
+.contact-link:hover { color: var(--red); }
+.cl-icon {
+  width: 36px; height: 36px;
+  border: 1px solid var(--gray-line);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+  color: var(--red);
+}
+.contact-cta-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: 32px; text-transform: uppercase;
+  color: var(--white); margin-bottom: 1rem; line-height: 1;
+}
+.contact-cta-text {
+  font-size: 15px; color: rgba(255,255,255,0.75); line-height: 1.6; margin-bottom: 2rem;
+}
+.btn-white {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--white); color: var(--red);
+  font-family: 'Barlow Semi Condensed', sans-serif;
+  font-weight: 700; font-size: 13px; letter-spacing: 0.1em;
+  text-transform: uppercase; text-decoration: none;
+  padding: 13px 26px; width: fit-content;
+  transition: background .2s;
+}
+.btn-white:hover { background: var(--off-white); }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--gray-dark);
+  border-top: 1px solid var(--gray-line);
+  padding: 1.5rem 4rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 14px; letter-spacing: 0.05em;
+  color: var(--gray-light); text-transform: uppercase;
+}
+.footer-name span { color: var(--red); }
+.footer-copy {
+  font-size: 11px; color: var(--gray-light); letter-spacing: 0.05em;
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  section { padding: 4rem 2rem; }
+  .stack-grid { grid-template-columns: 1fr 1fr; }
+  .exp-item { grid-template-columns: 1fr; }
+  .exp-left { border-right: none; border-bottom: 1px solid var(--gray-line); padding-bottom: 1rem; }
+  .edu-grid { grid-template-columns: 1fr; }
+  #contacto { grid-template-columns: 1fr; }
+  .contact-left { border-right: none; border-bottom: 1px solid var(--gray-line); }
+  nav { padding: 0 1.5rem; }
+  .nav-links { display: none; }
+  .hero-left { padding: 4rem 2rem; }
+}
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
-  <div class="nav-logo">OB.</div>
+  <a href="#" class="nav-logo">OB<span>.</span></a>
   <ul class="nav-links">
-    <li><a href="#skills">Stack</a></li>
-    <li><a href="#experience">Experiencia</a></li>
-    <li><a href="#education">Formación</a></li>
-    <li><a href="#contact">Contacto</a></li>
+    <li><a href="#stack">Stack</a></li>
+    <li><a href="#experiencia">Experiencia</a></li>
+    <li><a href="#formacion">Formación</a></li>
+    <li><a href="#contacto">Contacto</a></li>
   </ul>
+  <div class="nav-badge">Disponible</div>
 </nav>
 
 <!-- HERO -->
-<section class="hero" style="max-width:100%; padding:0;">
+<section class="hero" style="padding:0;">
   <div class="hero-left">
-    <div class="hero-tag animate delay-1">Frontend Engineer · Santiago, Chile</div>
-    <h1 class="animate delay-2">
-      Oscar
-      <span class="highlight">Ballesteros</span>
-    </h1>
-    <p class="hero-subtitle animate delay-3">
-      Más de 8 años construyendo interfaces de alta escala. Especializado en JavaScript, React y Node.js. Actualmente en Mercado Libre.
-    </p>
-    <div class="hero-cta animate delay-4">
-      <a href="#contact" class="btn btn-primary">Hablemos</a>
-      <a href="#experience" class="btn btn-outline">Ver experiencia</a>
+    <div class="hero-eyebrow">Software Engineer · Santiago, Chile</div>
+    <div class="hero-name">Oscar</div>
+    <div class="hero-lastname">Ballesteros</div>
+    <div class="hero-role">FullStack Senior · React · TypeScript · Node.js · NestJS</div>
+    <p class="hero-desc">Más de 8 años desarrollando sistemas a escala en empresas líderes de Latinoamérica. Especializado en arquitecturas de microfrontends, performance y observabilidad end-to-end.</p>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">8+</div>
+        <div class="stat-label">Años de<br>experiencia</div>
+      </div>
+      <div>
+        <div class="stat-num">130K</div>
+        <div class="stat-label">Usuarios<br>atendidos</div>
+      </div>
+      <div>
+        <div class="stat-num">4</div>
+        <div class="stat-label">Países<br>con impacto</div>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <a href="#contacto" class="btn-primary">Contactar →</a>
+      <a href="#experiencia" class="btn-ghost">Ver experiencia</a>
     </div>
   </div>
+
   <div class="hero-right">
-    <div class="big-number">8+</div>
-    <div class="stats-grid animate delay-3">
-      <div class="stat-card">
-        <span class="stat-number">8+</span>
-        <span class="stat-label">Años de experiencia</span>
+    <div class="hero-grid"></div>
+    <div class="hero-big-text">OB</div>
+    <div class="hero-stack-visual">
+      <div class="stack-row">
+        <div class="stack-chip hot">React</div>
+        <div class="stack-chip hot">TypeScript</div>
+        <div class="stack-chip">Microfrontends</div>
+        <div class="stack-chip">Webpack</div>
       </div>
-      <div class="stat-card">
-        <span class="stat-number">6</span>
-        <span class="stat-label">Empresas</span>
+      <div class="stack-row">
+        <div class="stack-chip">Node.js</div>
+        <div class="stack-chip hot">NestJS</div>
+        <div class="stack-chip">PostgreSQL</div>
+        <div class="stack-chip">Redis</div>
       </div>
-      <div class="stat-card">
-        <span class="stat-number">10+</span>
-        <span class="stat-label">Tecnologías</span>
+      <div class="stack-row">
+        <div class="stack-chip">Jest</div>
+        <div class="stack-chip">AWS</div>
+        <div class="stack-chip hot">CI/CD</div>
+        <div class="stack-chip">Scrum</div>
       </div>
-      <div class="stat-card">
-        <span class="stat-number">MIT</span>
-        <span class="stat-label">xPro Certificate</span>
+      <div class="stack-row">
+        <div class="stack-chip">Vue.js</div>
+        <div class="stack-chip">MongoDB</div>
+        <div class="stack-chip">Ruby on Rails</div>
+        <div class="stack-chip">Git</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SKILLS -->
-<section id="skills" style="padding:0; max-width:100%;">
-  <div>
-    <div class="section-header reveal">
-      <span class="section-number">01</span>
-      <h2>Stack técnico</h2>
-      <div class="section-line"></div>
+<!-- STACK -->
+<section id="stack">
+  <div class="section-label reveal">Stack Técnico</div>
+  <div class="section-title reveal">Tecnologías</div>
+  <div class="stack-grid reveal">
+    <div class="stack-category">
+      <div class="sc-label">Frontend</div>
+      <div class="sc-items">
+        <span class="sc-item featured">React</span>
+        <span class="sc-item featured">TypeScript</span>
+        <span class="sc-item featured">Microfrontends</span>
+        <span class="sc-item">Webpack</span>
+        <span class="sc-item">Design Systems</span>
+        <span class="sc-item">Vue.js</span>
+        <span class="sc-item">HTML5</span>
+        <span class="sc-item">CSS3</span>
+      </div>
     </div>
-    <div class="skills-grid reveal">
-      <div class="skill-chip">JavaScript</div>
-      <div class="skill-chip">React</div>
-      <div class="skill-chip">Node.js</div>
-      <div class="skill-chip">Ruby on Rails</div>
-      <div class="skill-chip">Vue.js</div>
-      <div class="skill-chip">Jest</div>
-      <div class="skill-chip">MongoDB</div>
-      <div class="skill-chip">PostgreSQL</div>
-      <div class="skill-chip">Azure Functions</div>
-      <div class="skill-chip">REST APIs</div>
-      <div class="skill-chip">Git</div>
-      <div class="skill-chip">CSS3</div>
+    <div class="stack-category">
+      <div class="sc-label">Backend & Runtime</div>
+      <div class="sc-items">
+        <span class="sc-item featured">NestJS</span>
+        <span class="sc-item featured">Node.js</span>
+        <span class="sc-item">REST APIs</span>
+        <span class="sc-item">Redis</span>
+        <span class="sc-item">Ruby on Rails</span>
+      </div>
+    </div>
+    <div class="stack-category">
+      <div class="sc-label">Bases de Datos</div>
+      <div class="sc-items">
+        <span class="sc-item featured">PostgreSQL</span>
+        <span class="sc-item">DynamoDB</span>
+        <span class="sc-item">MongoDB</span>
+      </div>
+    </div>
+    <div class="stack-category">
+      <div class="sc-label">Testing</div>
+      <div class="sc-items">
+        <span class="sc-item featured">Jest</span>
+        <span class="sc-item">Unit Testing</span>
+        <span class="sc-item">Integration Testing</span>
+      </div>
+    </div>
+    <div class="stack-category">
+      <div class="sc-label">Cloud & DevOps</div>
+      <div class="sc-items">
+        <span class="sc-item featured">AWS</span>
+        <span class="sc-item">CI/CD Pipelines</span>
+        <span class="sc-item">Git</span>
+        <span class="sc-item">Observabilidad</span>
+        <span class="sc-item">Azure Functions</span>
+      </div>
+    </div>
+    <div class="stack-category">
+      <div class="sc-label">Metodologías</div>
+      <div class="sc-items">
+        <span class="sc-item featured">Scrum</span>
+        <span class="sc-item">Agile</span>
+        <span class="sc-item">Code Review</span>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- EXPERIENCE -->
-<section id="experience">
-  <div class="section-header reveal">
-    <span class="section-number">02</span>
-    <h2>Experiencia</h2>
-    <div class="section-line"></div>
-  </div>
+<!-- EXPERIENCIA -->
+<section id="experiencia">
+  <div class="section-label reveal">Trayectoria</div>
+  <div class="section-title reveal">Experiencia</div>
   <div class="exp-list">
 
     <div class="exp-item reveal">
-      <div>
-        <div class="exp-date">Dic 2022 — Presente</div>
-        <span class="exp-current">Actual</span>
+      <div class="exp-left">
+        <div class="exp-period">Dic 2022 — May 2025</div>
+        <div class="exp-company">Mercado<br>Libre</div>
+        <div class="exp-location">Santiago, Chile</div>
       </div>
-      <div>
-        <div class="exp-company">Mercado Libre</div>
+      <div class="exp-right">
         <div class="exp-role">Software Engineer</div>
-        <p class="exp-desc">Miembro del equipo CX-ONE-HUB. Encargado de desarrollar y mejorar las distintas iniciativas del CRM interno para la gestión de casos de usuarios.</p>
+        <div class="exp-bullets">
+          <div class="exp-bullet">Desarrollé y mantuve el módulo de Estado del Representante — herramienta core que centraliza métricas de desempeño de más de 130.000 representantes de atención al cliente en Latinoamérica.</div>
+          <div class="exp-bullet">Implementé features con asistencia de IA dentro del CRM interno de gestión de casos, mejorando la eficiencia de resolución de tickets para los equipos de CX.</div>
+          <div class="exp-bullet">Lideré integraciones frontend con múltiples áreas de negocio bajo arquitectura de microfrontends, traduciendo necesidades de CX en soluciones técnicas escalables.</div>
+          <div class="exp-bullet">Gestioné el sistema de internacionalización del producto para los distintos mercados de la región.</div>
+        </div>
         <div class="exp-tags">
-          <span class="tag">JavaScript</span>
-          <span class="tag">React</span>
-          <span class="tag">Node.js</span>
-          <span class="tag">Jest</span>
+          <span class="exp-tag">React</span>
+          <span class="exp-tag">TypeScript</span>
+          <span class="exp-tag">Microfrontends</span>
+          <span class="exp-tag">Node.js</span>
+          <span class="exp-tag">Jest</span>
         </div>
       </div>
     </div>
 
     <div class="exp-item reveal">
-      <div>
-        <div class="exp-date">Nov 2021 — Nov 2022</div>
+      <div class="exp-left">
+        <div class="exp-period">Nov 2021 — Nov 2022</div>
+        <div class="exp-company">Falabella<br>FTC</div>
+        <div class="exp-location">Santiago, Chile</div>
       </div>
-      <div>
-        <div class="exp-company">Falabella FTC</div>
+      <div class="exp-right">
         <div class="exp-role">Desarrollador Full Stack</div>
-        <p class="exp-desc">Equipo THOR, middleware que comunicó Falabella y Sodimac con Linio en Chile, Colombia, Perú y México. Automatizó procesos manuales y lectura de indicadores clave. Arquitectura de stock, precios y sincronización de productos.</p>
+        <div class="exp-bullets">
+          <div class="exp-bullet">Desarrollé middleware crítico (Equipo THOR) que sincronizó stock, precios y productos entre Falabella, Sodimac y Linio en 4 países: Chile, Colombia, Perú y México.</div>
+          <div class="exp-bullet">Automaticé procesos manuales clave reduciendo significativamente la carga operacional del equipo de soporte.</div>
+          <div class="exp-bullet">Integré servicios cloud con sistemas on-premise usando Azure Functions, experiencia aplicable a arquitecturas híbridas con AWS.</div>
+        </div>
         <div class="exp-tags">
-          <span class="tag">JavaScript</span>
-          <span class="tag">Node.js</span>
-          <span class="tag">MongoDB</span>
-          <span class="tag">Azure Functions</span>
+          <span class="exp-tag">JavaScript</span>
+          <span class="exp-tag">Node.js</span>
+          <span class="exp-tag">MongoDB</span>
+          <span class="exp-tag">Azure Functions</span>
         </div>
       </div>
     </div>
 
     <div class="exp-item reveal">
-      <div>
-        <div class="exp-date">Jul 2020 — Oct 2021</div>
+      <div class="exp-left">
+        <div class="exp-period">Jul 2020 — Oct 2021</div>
+        <div class="exp-company">TacTech<br>(Falabella)</div>
+        <div class="exp-location">Santiago, Chile</div>
       </div>
-      <div>
-        <div class="exp-company">TacTech (Falabella)</div>
+      <div class="exp-right">
         <div class="exp-role">Desarrollador Full Stack</div>
-        <p class="exp-desc">Equipo SVL — Sellers Marketplace Falabella para Chile, Colombia y Perú. Soporte a nivel de plataforma, análisis de datos y desarrollo de nuevos features.</p>
+        <div class="exp-bullets">
+          <div class="exp-bullet">Trabajé en Seller Vendor Link (SVL), herramienta React con BFF para el ecosistema de sellers de Falabella operando en Chile, Colombia y Perú.</div>
+          <div class="exp-bullet">Implementé nuevas funcionalidades en arquitectura full stack: React y Vue en frontend, Ruby on Rails y Node.js en backend.</div>
+        </div>
         <div class="exp-tags">
-          <span class="tag">JavaScript</span>
-          <span class="tag">Ruby</span>
-          <span class="tag">Ruby on Rails</span>
-          <span class="tag">Node.js</span>
-          <span class="tag">MongoDB</span>
+          <span class="exp-tag">React</span>
+          <span class="exp-tag">Vue.js</span>
+          <span class="exp-tag">Node.js</span>
+          <span class="exp-tag">Ruby on Rails</span>
         </div>
       </div>
     </div>
 
     <div class="exp-item reveal">
-      <div>
-        <div class="exp-date">Sep 2018 — Jun 2020</div>
-      </div>
-      <div>
+      <div class="exp-left">
+        <div class="exp-period">Sep 2018 — Jun 2020</div>
         <div class="exp-company">Abstract</div>
+        <div class="exp-location">Santiago, Chile</div>
+      </div>
+      <div class="exp-right">
         <div class="exp-role">Desarrollador Full Stack</div>
-        <p class="exp-desc">Sistema de control y tickets para Tricao, conexión con máquinas vending, monitoreo de contaminación de pontones en industria salmonera, entre otros proyectos.</p>
+        <div class="exp-bullets">
+          <div class="exp-bullet">Construí sistema de medición y gestión de gases invernadero para pontones salmoneros del sur de Chile.</div>
+          <div class="exp-bullet">Desarrollé Vendomatica, plataforma de gestión y monitoreo de máquinas expendedoras.</div>
+          <div class="exp-bullet">Trabajé en el sitio web de Tricao con pasarela de pagos integrada (frontend + backend).</div>
+        </div>
         <div class="exp-tags">
-          <span class="tag">JavaScript</span>
-          <span class="tag">Ruby on Rails</span>
-          <span class="tag">React</span>
-          <span class="tag">Vue.js</span>
-          <span class="tag">PostgreSQL</span>
+          <span class="exp-tag">React</span>
+          <span class="exp-tag">Vue.js</span>
+          <span class="exp-tag">Ruby on Rails</span>
+          <span class="exp-tag">PostgreSQL</span>
         </div>
       </div>
     </div>
 
     <div class="exp-item reveal">
-      <div>
-        <div class="exp-date">Jun 2017 — Ago 2018</div>
-      </div>
-      <div>
+      <div class="exp-left">
+        <div class="exp-period">Jun 2017 — Ago 2018</div>
         <div class="exp-company">Pronueva</div>
-        <div class="exp-role">Full Stack Ruby on Rails</div>
-        <p class="exp-desc">WAKI — Sistema de gestión de horarios para industria hotelera y gastronómica. Diseño de base de datos relacional, administrador web, API y componentes React.</p>
+        <div class="exp-location">Santiago, Chile</div>
+      </div>
+      <div class="exp-right">
+        <div class="exp-role">Desarrollador Full Stack</div>
+        <div class="exp-bullets">
+          <div class="exp-bullet">Desarrollé WAKI, app de gestión de horarios para la industria hotelera y gastronómica sobre arquitectura Ruby on Rails.</div>
+          <div class="exp-bullet">Construí el módulo más complejo de la plataforma: calendario interactivo en React para gestión de turnos con lógica de negocio y políticas legales del sector.</div>
+        </div>
         <div class="exp-tags">
-          <span class="tag">Ruby on Rails</span>
-          <span class="tag">PostgreSQL</span>
-          <span class="tag">React</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="exp-item reveal">
-      <div>
-        <div class="exp-date">Oct 2016 — Ene 2017</div>
-      </div>
-      <div>
-        <div class="exp-company">Aceleración Labs</div>
-        <div class="exp-role">Ruby on Rails · Front-end Trainee</div>
-        <p class="exp-desc">Optimización de front-end con Bootstrap, CSS2/3 y jQuery. Desarrollo de módulos específicos en proyectos RoR.</p>
-        <div class="exp-tags">
-          <span class="tag">Ruby on Rails</span>
-          <span class="tag">jQuery</span>
-          <span class="tag">CSS3</span>
+          <span class="exp-tag">Ruby on Rails</span>
+          <span class="exp-tag">React</span>
+          <span class="exp-tag">PostgreSQL</span>
         </div>
       </div>
     </div>
@@ -770,92 +709,85 @@
   </div>
 </section>
 
-<!-- EDUCATION -->
-<section id="education" style="background:#0D0D0D; max-width:100%; padding:0;">
-  <div style="max-width:1200px; margin:0 auto; padding:7rem 4rem;">
-    <div class="section-header reveal">
-      <span class="section-number">03</span>
-      <h2>Formación</h2>
-      <div class="section-line"></div>
+<!-- FORMACIÓN -->
+<section id="formacion">
+  <div class="section-label reveal">Educación</div>
+  <div class="section-title reveal">Formación</div>
+  <div class="edu-grid reveal">
+    <div class="edu-item">
+      <div class="edu-inst">MIT xPro</div>
+      <div class="edu-degree">Professional Certificate: Full Stack Development with MERN — Massachusetts Institute of Technology</div>
+      <div class="edu-period">2021 — 2022</div>
+      <div class="edu-badge">Cambridge, MA</div>
     </div>
-    <div class="edu-grid reveal">
-      <div class="edu-card">
-        <div class="edu-year">2021 — 2022</div>
-        <div class="edu-school">MIT xPro</div>
-        <div class="edu-degree">Professional Certificate in Coding: Full Stack Development with MERN — Massachusetts Institute of Technology</div>
-      </div>
-      <div class="edu-card">
-        <div class="edu-year">2013 — 2018</div>
-        <div class="edu-school">INACAP Santiago</div>
-        <div class="edu-degree">Ingeniero Informático — Universidad Tecnológica de Chile</div>
-      </div>
-      <div class="edu-card">
-        <div class="edu-year">2002 — 2006</div>
-        <div class="edu-school">U. Politécnico Grancolombiano</div>
-        <div class="edu-degree">Profesional en Medios Audiovisuales, énfasis en diseño gráfico y fotografía — Bogotá</div>
-      </div>
+    <div class="edu-item">
+      <div class="edu-inst">INACAP</div>
+      <div class="edu-degree">Ingeniería Informática — Universidad Tecnológica de Chile</div>
+      <div class="edu-period">2013 — 2018</div>
+      <div class="edu-badge">Santiago, Chile</div>
     </div>
   </div>
 </section>
 
-<!-- CONTACT -->
-<section id="contact" style="padding:0; max-width:100%;">
-  <div>
-    <div class="contact-inner">
-      <div class="reveal">
-        <div class="contact-title">
-          Trabajemos<br><span>juntos.</span>
-        </div>
-        <p class="contact-desc">
-          Disponible para nuevas oportunidades en Frontend Engineering. Abierto a proyectos desafiantes y equipos con cultura de calidad.
-        </p>
-      </div>
-      <div class="contact-links reveal">
-        <a href="mailto:oscartic@gmail.com" class="contact-link">
-          <div>
-            <span class="contact-link-label">Email</span>
-            <span class="contact-link-value">oscartic@gmail.com</span>
-          </div>
-          <span class="contact-link-arrow">→</span>
-        </a>
-        <a href="https://oscarballesteros.cl" target="_blank" class="contact-link">
-          <div>
-            <span class="contact-link-label">Website</span>
-            <span class="contact-link-value">oscarballesteros.cl</span>
-          </div>
-          <span class="contact-link-arrow">→</span>
-        </a>
-        <a href="https://linkedin.com/in/oscarballesteros" target="_blank" class="contact-link">
-          <div>
-            <span class="contact-link-label">LinkedIn</span>
-            <span class="contact-link-value">/oscarballesteros</span>
-          </div>
-          <span class="contact-link-arrow">→</span>
-        </a>
-      </div>
+<!-- CONTACTO -->
+<section id="contacto" style="padding:0;">
+  <div class="contact-left">
+    <div class="section-label reveal">Hablemos</div>
+    <div class="contact-big reveal">Trabajemos<br>juntos.</div>
+    <div class="contact-links reveal">
+      <a href="mailto:oscartic@gmail.com" class="contact-link">
+        <div class="cl-icon">@</div>
+        oscartic@gmail.com
+      </a>
+      <a href="https://oscarballesteros.cl" target="_blank" class="contact-link">
+        <div class="cl-icon">WEB</div>
+        oscarballesteros.cl
+      </a>
+      <a href="https://linkedin.com/in/oscarballesteros" target="_blank" class="contact-link">
+        <div class="cl-icon">IN</div>
+        linkedin.com/in/oscarballesteros
+      </a>
+      <a class="contact-link" style="cursor:default;">
+        <div class="cl-icon">📍</div>
+        Santiago, Chile
+      </a>
     </div>
+  </div>
+  <div class="contact-right reveal">
+    <div class="contact-cta-title">¿Tienes un<br>proyecto?</div>
+    <p class="contact-cta-text">Disponible para posiciones full time, contratos y proyectos freelance en Chile y remoto.</p>
+    <a href="mailto:oscartic@gmail.com" class="btn-white">Enviar mensaje →</a>
   </div>
 </section>
 
+<!-- FOOTER -->
 <footer>
-  © 2025 Oscar René Ballesteros P. — Frontend Engineer · Santiago, Chile
+  <div class="footer-name">Oscar <span>Ballesteros</span></div>
+  <div class="footer-copy">Software Engineer · Santiago, Chile · 2025</div>
 </footer>
 
 <script>
-  // Scroll reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => {
-          entry.target.classList.add('visible');
-        }, i * 80);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(el => {
+    if (el.isIntersecting) {
+      el.target.classList.add('visible');
+      observer.unobserve(el.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-  reveals.forEach(el => observer.observe(el));
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Stack chip hover sound feedback (visual only)
+document.querySelectorAll('.stack-chip').forEach(chip => {
+  chip.addEventListener('mouseenter', () => {
+    chip.style.transform = 'translateY(-2px)';
+  });
+  chip.addEventListener('mouseleave', () => {
+    chip.style.transform = '';
+  });
+});
 </script>
 </body>
 </html>
